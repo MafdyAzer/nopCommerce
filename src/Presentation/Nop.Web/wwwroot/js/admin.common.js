@@ -48,26 +48,33 @@ function checkAllOverriddenStoreValue(item) {
 
 function checkOverriddenStoreValue(obj, selector) {
     var elementsArray = selector.split(",");
+
+    // first toggle appropriate hidden inputs for checkboxes
+    if ($(selector).is(':checkbox')) {
+        var name = $(selector).attr('name');
+        $('input:hidden[name="' + name + '"]').attr('disabled', !$(obj).is(':checked'));
+    }
+
     if (!$(obj).is(':checked')) {
         $(selector).attr('disabled', true);
         //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function(key, value) {
+        $.each(elementsArray, function (key, value) {
             var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable(false);
             }
-        }); 
+        });
     }
     else {
         $(selector).removeAttr('disabled');
         //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function(key, value) {
+        $.each(elementsArray, function (key, value) {
             var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable();
             }
         });
-    };
+    }
 }
 
 function bindBootstrapTabSelectEvent(tabsId, inputId) {
